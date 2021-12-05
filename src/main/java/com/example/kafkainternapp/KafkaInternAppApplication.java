@@ -1,11 +1,19 @@
 package com.example.kafkainternapp;
 
+import com.example.kafkainternapp.services.Producer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class KafkaInternAppApplication implements CommandLineRunner {
+    private final Producer producerService;
+
+    @Autowired
+    public KafkaInternAppApplication(Producer producerService) {
+        this.producerService = producerService;
+    }
 
     public static void main(String[] args) {
         SpringApplication.run(KafkaInternAppApplication.class, args);
@@ -14,5 +22,6 @@ public class KafkaInternAppApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         System.out.println("Kafka app");
+        producerService.produceMessages("App1");
     }
 }
