@@ -97,6 +97,11 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.flywaydb.enterprise</groupId>
+                <artifactId>flyway-maven-plugin</artifactId>
+                <version>8.2.0</version>
+            </plugin>
         </plugins>
     </build>
 

@@ -1,23 +1,15 @@
-package com.example.kafkainternapp.entities;
+package com.example.kafkainternapp.dto;
 
-import javax.persistence.*;
-import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
-@Entity
-public class ConsumedEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class Record {
     private long id;
-    @Size(max = 100)
-    @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "date_time", nullable = false)
     private Timestamp dateTime;
 
-    public ConsumedEntity() {};
+    public Record() {};
 
-    public ConsumedEntity(long id, String name, Timestamp dateTime) {
+    public Record(long id, String name, Timestamp dateTime) {
         this.id = id;
         this.name = name;
         this.dateTime = dateTime;

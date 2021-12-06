@@ -10,4 +10,4 @@ FROM openjdk:11
 RUN addgroup --system dins_intern && adduser --system dins_intern --ingroup dins_intern
 USER dins_intern:dins_intern
 COPY --from=builder /app/target/*.jar /build/app.jar
-ENTRYPOINT java -jar /build/app.jar
+ENTRYPOINT ["java", "-jar", "/build/app.jar"]

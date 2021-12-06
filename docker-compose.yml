@@ -6,13 +6,14 @@ services:
     volumes:
       - "postgres-data:/var/lib/postgresql/data"
     ports:
-      - "5432:5432"
+      - "6432:5432"
     env_file:
       - "./secrets/postgres.env"
   app:
     build:
       context: ./
     image: dins:app
+    command: ["--app_mode=consume"]
     volumes:
       - ./:/app
     ports:
@@ -21,6 +22,9 @@ services:
       - "./secrets/postgres.env"
     environment:
       - POSTGRES_HOST=postgres-db
+      - KAFKA_HOST=kafka
+      - POSTGRES_PORT=5432
+      - KAFKA_PORT=9093
     depends_on: [ postgres-db ]
 volumes:
   postgres-data:

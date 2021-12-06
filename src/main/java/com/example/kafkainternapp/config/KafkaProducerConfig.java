@@ -1,6 +1,6 @@
 package com.example.kafkainternapp.config;
 
-import com.example.kafkainternapp.entities.ProducedEntity;
+import com.example.kafkainternapp.dto.Record;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,7 +20,7 @@ public class KafkaProducerConfig {
     private String bootstrapServers;
 
     @Bean
-    public ProducerFactory<String, ProducedEntity> producedEntityProducerFactory() {
+    public ProducerFactory<String, Record> recordProducerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
                 ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG,
@@ -38,7 +38,7 @@ public class KafkaProducerConfig {
     }
 
     @Bean
-    public KafkaTemplate<String, ProducedEntity> producedEntityKafkaTemplate() {
-        return new KafkaTemplate<>(producedEntityProducerFactory());
+    public KafkaTemplate<String, Record> recordKafkaTemplate() {
+        return new KafkaTemplate<>(recordProducerFactory());
     }
 }
