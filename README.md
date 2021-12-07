@@ -48,7 +48,7 @@
 * ```kafka_consumer_bootstrap-servers=<host1>:<port1>,<host2>:<port2>...``` -
   URL Kafka брокеров для клиента-потребителя
 * ```kafka_listener_idle-event-interval=<number>``` - время, прошедшее с момента прихода
-последнего сообщения, после которого нужно завершить приложений
+последнего сообщения, после которого нужно завершить приложение
 
 
 * ```db_url=jdbc:postgresql://$<host>:<port>/<db_name>``` - URL для подключения к БД PostgreSQL
