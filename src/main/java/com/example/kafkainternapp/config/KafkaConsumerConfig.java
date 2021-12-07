@@ -67,6 +67,7 @@ public class KafkaConsumerConfig {
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(recordConsumerFactory());
         factory.setCommonErrorHandler(new CustomKafkaLoggingErrorHandler());
+        factory.setBatchListener(true);
         factory.getContainerProperties().setIdleEventInterval(Long.parseLong(idleEventInterval));
         return factory;
     }
