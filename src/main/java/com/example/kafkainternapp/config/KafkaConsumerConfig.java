@@ -1,5 +1,6 @@
 package com.example.kafkainternapp.config;
 
+import com.example.kafkainternapp.Mode;
 import com.example.kafkainternapp.dto.Record;
 import com.example.kafkainternapp.error_handling.CustomKafkaLoggingErrorHandler;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -68,7 +69,7 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(recordConsumerFactory());
         factory.setCommonErrorHandler(new CustomKafkaLoggingErrorHandler());
         factory.setBatchListener(true);
-        factory.setAutoStartup(appMode.equals("consume"));
+        factory.setAutoStartup(Mode.CONSUME.toString().equals(appMode));
         factory.getContainerProperties().setIdleEventInterval(Long.parseLong(idleEventInterval));
         return factory;
     }

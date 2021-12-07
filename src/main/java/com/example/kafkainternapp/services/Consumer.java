@@ -1,14 +1,11 @@
 package com.example.kafkainternapp.services;
 
-import com.example.kafkainternapp.KafkaInternAppApplication;
 import com.example.kafkainternapp.dto.Record;
 import com.example.kafkainternapp.entities.ConsumedEntity;
 import com.example.kafkainternapp.repositories.ConsumedEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
@@ -22,8 +19,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class Consumer {
-    @Value("${app_mode}")
-    private String appMode;
     private final KafkaListenerEndpointRegistry registry;
     private final ConsumedEntityRepository consumedEntityRepository;
     Logger logger = LoggerFactory.getLogger(Consumer.class);

@@ -11,8 +11,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class KafkaInternAppApplication implements CommandLineRunner {
-    private final String PRODUCER_MODE = "produce";
-    private final String CONSUMER_MODE = "consume";
     @Value("${app_mode}")
     private String mode;
     @Value("${kafka_topic}")
@@ -33,7 +31,7 @@ public class KafkaInternAppApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         logger.info("Start application");
         logger.info(String.format("Chosen mode: %s", mode));
-        if (mode.equals(PRODUCER_MODE)) {
+        if (Mode.PRODUCE.toString().equals(mode)) {
             producerService.produceMessages(topic);
         }
     }
