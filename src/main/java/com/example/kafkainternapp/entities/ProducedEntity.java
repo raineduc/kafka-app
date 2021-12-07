@@ -5,6 +5,7 @@ import javax.validation.constraints.Size;
 import java.sql.Timestamp;
 
 @Entity
+@Table(name = "produced_entity") // Must be explicitly set for correct name transform
 public class ProducedEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
