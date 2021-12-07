@@ -16,11 +16,11 @@
 ```
 * Запустить Kafka контейнер
 ```
-    docker compose -f docker-compose-kafka.yml up kafka
+    docker compose -f docker-compose-kafka.yml up -d kafka
 ```
 * Запустить контейнер приложения
 ```
-    docker compose up app 
+    docker compose up -d app 
 ```
 
 ## Параметры приложения
