@@ -3,9 +3,11 @@ package com.example.kafkainternapp.config;
 import com.example.kafkainternapp.dto.Record;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
@@ -16,8 +18,11 @@ import java.util.Map;
 
 @Configuration
 public class KafkaProducerConfig {
-    @Value("${spring.kafka.producer.bootstrap-servers}")
-    private String bootstrapServers;
+    private final Environment env;
+
+    public KafkaProducerConfig(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public ProducerFactory<String, Record> recordProducerFactory() {
@@ -32,7 +37,7 @@ public class KafkaProducerConfig {
         );
         configProps.put(
                 ProducerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapServers
+                env.getProperty("kafka_producer_bootstrap-servers")
         );
         return new DefaultKafkaProducerFactory<>(configProps);
     }

@@ -17,7 +17,6 @@
     </appender>
     <appender name="RollingFile"
               class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS}/kafka-app-logger.log</file>
         <param name="Append" value="false" />
         <encoder
                 class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">

@@ -4,9 +4,11 @@ import com.example.kafkainternapp.dto.Record;
 import com.example.kafkainternapp.error_handling.CustomKafkaLoggingErrorHandler;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.ConsumerFactory;
@@ -20,24 +22,21 @@ import java.util.Map;
 @EnableKafka
 @Configuration
 public class KafkaConsumerConfig {
-    @Value("${spring.kafka.producer.bootstrap-servers}")
-    private String bootstrapServers;
-    @Value("${spring.kafka.consumer.group-id}")
-    private String groupId;
-    @Value("${spring.kafka.listener.idle-event-interval}")
+    @Value("${kafka_listener_idle-event-interval}")
     private String idleEventInterval;
-    @Value("${spring.kafka.consumer.auto-offset-reset}")
-    private String autoOffsetReset;
+    @Value("${app_mode}")
+    private String appMode;
+    private final Environment env;
+
+    public KafkaConsumerConfig(Environment env) {
+        this.env = env;
+    }
 
     @Bean
     public ConsumerFactory<String, Record> recordConsumerFactory() {
         Map<String, Object> props = new HashMap<>();
-        props.put(
-                ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapServers);
-        props.put(
-                ConsumerConfig.GROUP_ID_CONFIG,
-                groupId);
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, env.getProperty("kafka_consumer_bootstrap-servers"));
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, env.getProperty("kafka_consumer_group-id"));
         props.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
                 StringDeserializer.class);
@@ -54,8 +53,9 @@ public class KafkaConsumerConfig {
         );
         props.put(
                 ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,
-                autoOffsetReset
+                env.getProperty("spring.kafka.consumer.auto-offset-reset")
         );
+
         return new DefaultKafkaConsumerFactory<>(props);
     }
 
@@ -68,6 +68,7 @@ public class KafkaConsumerConfig {
         factory.setConsumerFactory(recordConsumerFactory());
         factory.setCommonErrorHandler(new CustomKafkaLoggingErrorHandler());
         factory.setBatchListener(true);
+        factory.setAutoStartup(appMode.equals("consume"));
         factory.getContainerProperties().setIdleEventInterval(Long.parseLong(idleEventInterval));
         return factory;
     }

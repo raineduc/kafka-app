@@ -7,24 +7,28 @@ services:
       - "postgres-data:/var/lib/postgresql/data"
     ports:
       - "6432:5432"
-    env_file:
-      - "./secrets/postgres.env"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=default
   app:
     build:
       context: ./
     image: dins:app
-    command: ["--app_mode=consume"]
+    user: root
     volumes:
       - ./:/app
+      - ./logs:/logs
     ports:
       - "3000:8080"
-    env_file:
-      - "./secrets/postgres.env"
     environment:
       - POSTGRES_HOST=postgres-db
       - KAFKA_HOST=kafka
       - POSTGRES_PORT=5432
       - KAFKA_PORT=9093
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD=default
     depends_on: [ postgres-db ]
 volumes:
   postgres-data:

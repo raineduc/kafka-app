@@ -15,6 +15,8 @@ public class KafkaInternAppApplication implements CommandLineRunner {
     private final String CONSUMER_MODE = "consume";
     @Value("${app_mode}")
     private String mode;
+    @Value("${kafka_topic}")
+    private String topic;
     private final Producer producerService;
     Logger logger = LoggerFactory.getLogger(KafkaInternAppApplication.class);
 
@@ -32,7 +34,7 @@ public class KafkaInternAppApplication implements CommandLineRunner {
         logger.info("Start application");
         logger.info(String.format("Chosen mode: %s", mode));
         if (mode.equals(PRODUCER_MODE)) {
-            producerService.produceMessages("App1");
+            producerService.produceMessages(topic);
         }
     }
 }

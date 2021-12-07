@@ -7,10 +7,12 @@ import com.example.kafkainternapp.repositories.ConsumedEntityRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.event.EventListener;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.config.KafkaListenerEndpointRegistry;
+import org.springframework.kafka.event.ConsumerStartedEvent;
 import org.springframework.kafka.event.ListenerContainerIdleEvent;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
@@ -19,8 +21,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@ConditionalOnProperty(name = "app_mode", havingValue = "consume")
 public class Consumer {
+    @Value("${app_mode}")
+    private String appMode;
     private final KafkaListenerEndpointRegistry registry;
     private final ConsumedEntityRepository consumedEntityRepository;
     Logger logger = LoggerFactory.getLogger(Consumer.class);
@@ -29,10 +32,9 @@ public class Consumer {
     public Consumer(ConsumedEntityRepository consumedEntityRepository, KafkaListenerEndpointRegistry registry) {
         this.consumedEntityRepository = consumedEntityRepository;
         this.registry = registry;
-        logger.info("Start listening topic");
     }
 
-    @KafkaListener(topics = "${kafka_topic}", groupId = "${spring.kafka.consumer.group-id}")
+    @KafkaListener(topics = "${kafka_topic}", groupId = "${kafka_consumer_group-id}")
     public void listenToMessages(@Payload List<Record> messages) {
         logger.trace("A batch of messages arrived");
         for (Record record: messages) {
@@ -50,5 +52,10 @@ public class Consumer {
     public void eventHandler(ListenerContainerIdleEvent event) {
         logger.info("Stop listening topic");
         registry.stop();
+    }
+
+    @EventListener
+    public void eventHandler(ConsumerStartedEvent event) {
+        logger.info("Start listening topic");
     }
 }
