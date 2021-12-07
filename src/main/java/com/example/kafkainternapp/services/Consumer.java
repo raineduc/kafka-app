@@ -1,8 +1,11 @@
 package com.example.kafkainternapp.services;
 
+import com.example.kafkainternapp.KafkaInternAppApplication;
 import com.example.kafkainternapp.dto.Record;
 import com.example.kafkainternapp.entities.ConsumedEntity;
 import com.example.kafkainternapp.repositories.ConsumedEntityRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.event.EventListener;
@@ -20,29 +23,32 @@ import java.util.stream.Collectors;
 public class Consumer {
     private final KafkaListenerEndpointRegistry registry;
     private final ConsumedEntityRepository consumedEntityRepository;
+    Logger logger = LoggerFactory.getLogger(Consumer.class);
 
     @Autowired
     public Consumer(ConsumedEntityRepository consumedEntityRepository, KafkaListenerEndpointRegistry registry) {
-        System.out.println("Entered in Consumer");
         this.consumedEntityRepository = consumedEntityRepository;
         this.registry = registry;
+        logger.info("Start listening topic");
     }
 
     @KafkaListener(topics = "${kafka_topic}", groupId = "${spring.kafka.consumer.group-id}")
     public void listenToMessages(@Payload List<Record> messages) {
-        System.out.println("a");
+        logger.trace("A batch of messages arrived");
         for (Record record: messages) {
-            System.out.println(record.getId());
+            logger.trace(String.format("Entity with id = %d, name = %s, timestamp = %3$TD %3$TT has arrived",
+                    record.getId(), record.getName(), record.getDateTime()));
         }
         List<ConsumedEntity> entities = messages.stream()
                 .map(message -> new ConsumedEntity(message.getId(), message.getName(), message.getDateTime()))
                 .collect(Collectors.toList());
         consumedEntityRepository.saveAll(entities);
+        logger.trace("The batch saved");
     }
 
     @EventListener
     public void eventHandler(ListenerContainerIdleEvent event) {
-        System.out.println("Stop listener container");
+        logger.info("Stop listening topic");
         registry.stop();
     }
 }

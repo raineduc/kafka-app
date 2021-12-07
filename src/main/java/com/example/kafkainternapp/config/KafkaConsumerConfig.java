@@ -29,7 +29,6 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, Record> recordConsumerFactory() {
-        System.out.println(String.format("{}", idleEventInterval));
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,

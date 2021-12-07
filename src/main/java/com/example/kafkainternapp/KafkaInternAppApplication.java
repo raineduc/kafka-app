@@ -1,6 +1,8 @@
 package com.example.kafkainternapp;
 
 import com.example.kafkainternapp.services.Producer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -14,6 +16,7 @@ public class KafkaInternAppApplication implements CommandLineRunner {
     @Value("${app_mode}")
     private String mode;
     private final Producer producerService;
+    Logger logger = LoggerFactory.getLogger(KafkaInternAppApplication.class);
 
     @Autowired
     public KafkaInternAppApplication(Producer producerService) {
@@ -26,8 +29,8 @@ public class KafkaInternAppApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Kafka app");
-        System.out.println(mode);
+        logger.info("Start application");
+        logger.info(String.format("Chosen mode: %s", mode));
         if (mode.equals(PRODUCER_MODE)) {
             producerService.produceMessages("App1");
         }
